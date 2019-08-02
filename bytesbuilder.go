@@ -1,10 +1,9 @@
-package bytesbuilder
+package util
 
 import (
 	"encoding/base64"
 	"encoding/binary"
 	"encoding/hex"
-
 	"github.com/btcsuite/btcutil/base58"
 )
 
@@ -12,7 +11,7 @@ type ByteBuilder struct {
 	BytesArr []byte
 }
 
-func NewBuilder() *ByteBuilder {
+func NewBytesBuilder() *ByteBuilder {
 	b := ByteBuilder{}
 	return &b
 }
@@ -21,12 +20,16 @@ func (builder *ByteBuilder) Clear() {
 	builder.BytesArr = nil
 }
 
+//TODO : exception handling
+
 func (builder *ByteBuilder) Append(data interface{}) {
 	var byteData []byte
 	switch data.(type) {
 	case string:
 		b := data.(string)
 		byteData = []byte(b)
+	case uint8:
+		byteData = append(byteData, data.(uint8))
 	case []uint8:
 		byteData = data.([]byte)
 	case uint32:
