@@ -20,4 +20,5 @@ cache:
     - /home/travis/.cache/go-build
 
 script:
-  - go test -v -race
+  - cd bytesbuilder
+  - go test -v -race && cd ..
