@@ -1,4 +1,4 @@
-package util
+package bytesbuilder
 
 import (
 	"encoding/base64"
@@ -11,7 +11,7 @@ type ByteBuilder struct {
 	BytesArr []byte
 }
 
-func NewBytesBuilder() *ByteBuilder {
+func NewBuilder() *ByteBuilder {
 	b := ByteBuilder{}
 	return &b
 }

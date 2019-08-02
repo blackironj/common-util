@@ -1,4 +1,4 @@
-package util
+package bytesbuilder
 
 import (
 	"bytes"
@@ -15,7 +15,7 @@ const (
 )
 
 func TestByteBuilder_AppendBaseXX(t *testing.T) {
-	builder := NewBytesBuilder()
+	builder := NewBuilder()
 
 	builder.AppendBase64(base64Str)
 	builder.AppendBase58(base58Str)
@@ -30,7 +30,7 @@ func TestByteBuilder_AppendBaseXX(t *testing.T) {
 }
 
 func TestByteBuilder_AppendHex(t *testing.T) {
-	builder := NewBytesBuilder()
+	builder := NewBuilder()
 
 	builder.AppendHex(hexStr)
 
@@ -44,7 +44,7 @@ func TestByteBuilder_AppendHex(t *testing.T) {
 }
 
 func TestByteBuilder_CommonAppend(t *testing.T) {
-	builder := NewBytesBuilder()
+	builder := NewBuilder()
 
 	var u8 uint8
 	var u8Arr []uint8
