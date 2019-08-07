@@ -40,24 +40,24 @@ F6FZeg==
 )
 
 func TestEcdsa_CaseOfNoPassword(t *testing.T) {
-	signature, err := Sign(testMsg, testSkNoPass)
+	signature, err := Sign([]byte(testMsg), testSkNoPass)
 	if err != nil {
 		t.Error(err)
 	}
 
-	success := Verify(testMsg, signature, testCert)
+	success := Verify([]byte(testMsg), signature, testCert)
 	if !success {
 		t.Errorf("TestEcdsa_CaseOfNoPassword failed: want '%t', got '%t'", true, success)
 	}
 }
 
 func TestEcdsa_CaseOfPassword(t *testing.T) {
-	signature, err := Sign(testMsg, testSkPass, password)
+	signature, err := Sign([]byte(testMsg), testSkPass, password)
 	if err != nil {
 		t.Error(err)
 	}
 
-	success := Verify(testMsg, signature, testCert)
+	success := Verify([]byte(testMsg), signature, testCert)
 	if !success {
 		t.Errorf("TestEcdsa_CaseOfNoPassword failed: want '%t', got '%t'", true, success)
 	}

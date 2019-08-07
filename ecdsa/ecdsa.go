@@ -13,7 +13,7 @@ import (
 
 // TODO: write log
 
-func Sign(msg, skPem string, pass ...string) (string, error) {
+func Sign(msg []byte, skPem string, pass ...string) (string, error) {
 	var privateKey *ecdsa.PrivateKey
 	var err error
 
@@ -27,7 +27,7 @@ func Sign(msg, skPem string, pass ...string) (string, error) {
 		return "", err
 	}
 
-	r, s, err := ecdsa.Sign(rand.Reader, privateKey, []byte(msg))
+	r, s, err := ecdsa.Sign(rand.Reader, privateKey, msg)
 	if err != nil {
 		return "", err
 	}
@@ -38,7 +38,7 @@ func Sign(msg, skPem string, pass ...string) (string, error) {
 	return string(signature), nil
 }
 
-func Verify(msg, sigStr, certPem string) bool {
+func Verify(msg []byte, sigStr, certPem string) bool {
 	publicKey, err := GetPublicKeyFromPem(certPem)
 
 	if err != nil {
@@ -53,7 +53,7 @@ func Verify(msg, sigStr, certPem string) bool {
 	s := new(big.Int)
 	s.SetBytes(sigBytes[halfSigLen:])
 
-	return ecdsa.Verify(publicKey, []byte(msg), r, s)
+	return ecdsa.Verify(publicKey, msg, r, s)
 }
 
 func DecodePem(pemData string) (*pem.Block, error) {
