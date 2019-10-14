@@ -1,4 +1,4 @@
-module github.com/blackironj/util/bytesbuilder
+module github.com/blackironj/util
 
 go 1.12
 
