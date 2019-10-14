@@ -75,3 +75,7 @@ func (builder *ByteBuilder) AppendBase58(b58Str string) {
 func (builder *ByteBuilder) GetBytes() []byte {
 	return builder.BytesArr
 }
+
+func (builder *ByteBuilder) GetString() string {
+	return string(builder.BytesArr)
+}
