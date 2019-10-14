@@ -4,11 +4,10 @@ import (
 	"crypto/ecdsa"
 	"crypto/rand"
 	"crypto/x509"
-	"encoding/pem"
 	"errors"
-	"io/ioutil"
 	"math/big"
-	"strings"
+
+	"github.com/blackironj/util/pem"
 )
 
 // TODO: write log
@@ -18,9 +17,9 @@ func Sign(msg []byte, skPem string, pass ...string) (string, error) {
 	var err error
 
 	if len(pass) != 0 {
-		privateKey, err = GetPrivateKeyFromPem(skPem, pass[0])
+		privateKey, err = GetECPrivateKeyFromPem(skPem, pass[0])
 	} else {
-		privateKey, err = GetPrivateKeyFromPem(skPem)
+		privateKey, err = GetECPrivateKeyFromPem(skPem)
 	}
 
 	if err != nil {
@@ -39,7 +38,7 @@ func Sign(msg []byte, skPem string, pass ...string) (string, error) {
 }
 
 func Verify(msg []byte, sigStr, certPem string) bool {
-	publicKey, err := GetPublicKeyFromPem(certPem)
+	publicKey, err := GetECPublicKeyFromPem(certPem)
 
 	if err != nil {
 		return false
@@ -56,28 +55,8 @@ func Verify(msg []byte, sigStr, certPem string) bool {
 	return ecdsa.Verify(publicKey, msg, r, s)
 }
 
-func DecodePem(pemData string) (*pem.Block, error) {
-	r := strings.NewReader(pemData)
-
-	pemBytes, err := ioutil.ReadAll(r)
-	if err != nil {
-		return nil, err
-	}
-
-	data, _ := pem.Decode(pemBytes)
-
-	return data, nil
-}
-
-func GetPublicKeyFromPem(pemData string) (*ecdsa.PublicKey, error) {
-	data, decodeErr := DecodePem(pemData)
-
-	if decodeErr != nil {
-		return nil, decodeErr
-	}
-
-	var cert *x509.Certificate
-	cert, parseErr := x509.ParseCertificate(data.Bytes)
+func GetECPublicKeyFromPem(pemData string) (*ecdsa.PublicKey, error) {
+	cert, parseErr := pem.ParseX509Cert(pemData)
 
 	if parseErr != nil {
 		return nil, parseErr
@@ -88,8 +67,8 @@ func GetPublicKeyFromPem(pemData string) (*ecdsa.PublicKey, error) {
 	return publicKey, nil
 }
 
-func GetPrivateKeyFromPem(pemData string, pass ...string) (*ecdsa.PrivateKey, error) {
-	data, decodeErr := DecodePem(pemData)
+func GetECPrivateKeyFromPem(pemData string, pass ...string) (*ecdsa.PrivateKey, error) {
+	data, decodeErr := pem.DecodePEM(pemData)
 
 	if decodeErr != nil {
 		return nil, decodeErr
