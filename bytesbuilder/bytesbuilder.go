@@ -4,6 +4,8 @@ import (
 	"encoding/base64"
 	"encoding/binary"
 	"encoding/hex"
+	"reflect"
+
 	"github.com/btcsuite/btcutil/base58"
 )
 
@@ -24,21 +26,32 @@ func (builder *ByteBuilder) Clear() {
 
 func (builder *ByteBuilder) Append(data interface{}) {
 	var byteData []byte
-	switch data.(type) {
+	switch t := data.(type) {
 	case string:
-		b := data.(string)
-		byteData = []byte(b)
+		byteData = []byte(t)
 	case uint8:
-		byteData = append(byteData, data.(uint8))
+		byteData = append(byteData, t)
 	case []uint8:
-		byteData = data.([]byte)
-	case uint32:
+		byteData = t
+	case int32, uint32:
+		var v uint32
+		if reflect.TypeOf(t).Kind() == reflect.Int32 {
+			v = uint32(t.(int32))
+		} else {
+			v = t.(uint32)
+		}
 		b := make([]byte, 4)
-		binary.BigEndian.PutUint32(b, data.(uint32))
+		binary.BigEndian.PutUint32(b, v)
 		byteData = b
-	case uint64:
+	case int64, uint64:
+		var v uint64
+		if reflect.TypeOf(t).Kind() == reflect.Int64 {
+			v = uint64(t.(int64))
+		} else {
+			v = t.(uint64)
+		}
 		b := make([]byte, 8)
-		binary.BigEndian.PutUint64(b, data.(uint64))
+		binary.BigEndian.PutUint64(b, v)
 		byteData = b
 	}
 	builder.BytesArr = append(builder.BytesArr, byteData...)
