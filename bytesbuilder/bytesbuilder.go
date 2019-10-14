@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/binary"
 	"encoding/hex"
+
 	"github.com/btcsuite/btcutil/base58"
 )
 
@@ -61,4 +62,8 @@ func (builder *ByteBuilder) AppendBase58(b58Str string) {
 
 func (builder *ByteBuilder) GetBytes() []byte {
 	return builder.BytesArr
+}
+
+func (builder *ByteBuilder) GetString() string {
+	return string(builder.BytesArr)
 }
