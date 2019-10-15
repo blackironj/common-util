@@ -36,3 +36,22 @@ func ParseX509Cert(pemData string) (*x509.Certificate, error) {
 
 	return cert, nil
 }
+
+func VerifyCert(pemData, CApemData string) bool {
+	CAcert, parseErr := ParseX509Cert(CApemData)
+	if parseErr != nil {
+		return false
+	}
+
+	cert, parseErr := ParseX509Cert(pemData)
+	if parseErr != nil {
+		return false
+	}
+
+	verifyErr := cert.CheckSignatureFrom(CAcert)
+	if verifyErr != nil {
+		return false
+	}
+
+	return true
+}
